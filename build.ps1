@@ -1,14 +1,14 @@
-docker build -t vacuum .
+docker build -t vacuum_v2 .
 
-# list ioamges
-docker images
+# list image
+docker images vacuum
 # tag the image we just build
-docker tag dd3d20b74f8a dockerbeaver/dockerrepo:vacuum
+docker tag c98b4949f62b dockerbeaver/dockerrepo:vacuum_v2
 # push to my own repository
 # may need to docker login
-docker push dockerbeaver/dockerrepo:vacuum
+docker push dockerbeaver/dockerrepo:vacuum_v2
 # can run it like this
-docker run -dp 3001:80 --restart always vacuum
+docker run -dp 3001:80 --restart always vacuum_v2
 # list containers
 docker container ls
 
@@ -16,5 +16,6 @@ docker container ls
 docker container kill inspiring_pike
 #>
 
-# can pull and run from repo like this
-# sudo docker run -dp 3001:80 --restart always dockerbeaver/dockerrepo:vacuum
+<# can pull and run from repo like this
+docker run -dp 3001:80 --restart always dockerbeaver/dockerrepo:vacuum_v2
+#>
