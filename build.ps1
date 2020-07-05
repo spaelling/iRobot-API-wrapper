@@ -1,14 +1,18 @@
-docker build -t vacuum_v2 .
+$tag = 'vacuum_v1.1'
+docker build -t $tag .
 
 # list image
-docker images vacuum
+docker images $tag
 # tag the image we just build
-docker tag c98b4949f62b dockerbeaver/dockerrepo:vacuum_v2
+docker tag d2a214529991 dockerbeaver/dockerrepo:$tag
 # push to my own repository
 # may need to docker login
-docker push dockerbeaver/dockerrepo:vacuum_v2
+docker push dockerbeaver/dockerrepo:$tag
+
+"sudo docker run -dp 3001:80 --restart always dockerbeaver/dockerrepo:$tag" | clip
+
 # can run it like this
-docker run -dp 3001:80 --restart always vacuum_v2
+docker run -dp 3001:80 --restart always $tag
 # list containers
 docker container ls
 

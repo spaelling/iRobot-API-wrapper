@@ -9,6 +9,7 @@ rest980ApiIp = '192.168.1.101'
 rest980ApiPort = '3000'
 # set initial paused at some time far in the past
 paused_at = datetime.now() + timedelta(days=-42)
+double_tap_delay = 20 # seconds
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     # logging.info('Python HTTP trigger function processed a request.')
@@ -29,8 +30,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     action = None
     if phase == 'charge' and batPct < 50:
         logging.info(f'Roomba is charging, not taking any actions')    
-    # dock if double tapping - if last action was pause and less than 5 seconds ago
-    elif now - paused_at < timedelta(seconds=5):
+    # dock if double tapping - if last action was pause and less than x seconds ago
+    elif now - paused_at < timedelta(seconds=double_tap_delay):
         action = 'dock'
         # wait a few seconds to not confuse the robot
         time.sleep(5)
