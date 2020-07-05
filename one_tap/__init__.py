@@ -9,6 +9,7 @@ rest980ApiIp = '192.168.1.101'
 rest980ApiPort = '3000'
 # set initial paused at some time far in the past
 paused_at = datetime.now() + timedelta(days=-42)
+# how long after pausing the vacuum one can tap again and dock it
 double_tap_delay = 20 # seconds
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -33,8 +34,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # dock if double tapping - if last action was pause and less than x seconds ago
     elif now - paused_at < timedelta(seconds=double_tap_delay):
         action = 'dock'
-        # wait a few seconds to not confuse the robot
-        time.sleep(5)
+        # wait a bit to not confuse the robot
+        time.sleep(1)
     # if stopped and bin is not full
     elif phase == 'stop' or phase == 'charge' and not binFull:
         if cycle == 'none':
