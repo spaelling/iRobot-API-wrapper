@@ -1,16 +1,19 @@
-$tag = 'vacuum_v1.2'
+$tag = 'vacuum_v1.2.2c'
 docker build -t $tag .
 
-# list image
-docker images $tag
+# get image id
+$imageid = docker images $tag -q
 # tag the image we just build
-docker tag d2a214529991 dockerbeaver/dockerrepo:$tag
+docker tag $imageid dockerbeaver/dockerrepo:$tag
 # push to my own repository
 # may need to docker login
 docker push dockerbeaver/dockerrepo:$tag
 
 # paste to dockerhost. kills existing container, prunes stopped containers and runs a new one WARNING: will also prune unrelated containers!
-"sudo docker container ps -q --filter name=vacuum | xargs sudo docker container kill`nsudo docker container prune --force`nsudo docker run --name vacuum -dp 3001:80 --restart always dockerbeaver/dockerrepo:$tag`nsudo docker container ps" | clip
+$cmd = "sudo docker container ps -q --filter name=vacuum | xargs sudo docker container kill`nsudo docker container prune --force`nsudo docker run --name vacuum -dp 3001:80 --restart always dockerbeaver/dockerrepo:$tag`nsudo docker container ps"
+$cmd | clip
+# kinda works on windows
+$cmd.Replace('sudo ','') | clip
 
 # kill container with same name 
 "sudo docker container ps -q --filter name=vacuum | xargs sudo docker container kill" | clip

@@ -5,7 +5,7 @@ import time
 from datetime import timedelta
 from datetime import datetime
 
-rest980ApiIp = '192.168.1.101'
+rest980ApiIp = '192.168.1.110'
 rest980ApiPort = '3000'
 # set initial paused at some time far in the past
 paused_at = datetime.now() + timedelta(days=-42)
@@ -15,7 +15,10 @@ double_tap_delay = 20 # seconds
 def main(req: func.HttpRequest) -> func.HttpResponse:
     # logging.info('Python HTTP trigger function processed a request.')
 
-    mission = requests.get(f"http://{rest980ApiIp}:{rest980ApiPort}/api/local/info/mission")
+    try:
+        mission = requests.get(f"http://{rest980ApiIp}:{rest980ApiPort}/api/local/info/mission")
+    except:
+        return func.HttpResponse(f"Failed to get mission info", status_code=500)   
 
     j = json.loads(mission.text)
     cycle = j['cleanMissionStatus']['cycle']
@@ -51,7 +54,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # TODO: what if phase is hmUsrDock, ie. returning to dock
     if action:
         logging.info(f"action: {action}")
-        response = requests.get(f"http://{rest980ApiIp}:{rest980ApiPort}/api/local/action/{action}")
+        try:
+            response = requests.get(f"http://{rest980ApiIp}:{rest980ApiPort}/api/local/action/{action}")
+        except:
+            return func.HttpResponse(f"Failed to do action '{action}'", status_code=500)
+        
     else:
         # for logging purposes we set action to string 'none'
         action = 'none'
